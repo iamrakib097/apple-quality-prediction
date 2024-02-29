@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quality Prediction Interface</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #e66465, #9198e5);
+        }
+
+        .container {
+            padding: 20px;
+            border-radius: 30px;
+            background-color: rgba(255, 255, 255, 0.7); /* Transparent white background */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            margin-right: 10px;
+            display: inline-block;
+            width: 100px; /* Fixed width for labels */
+            color: #333;
+        }
+
+        .input-group input[type="number"] {
+            width: 150px; /* Fixed width for inputs */
+            border: none;
+            padding: 8px;
+            border-radius: 20px;
+            outline: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Adjust box shadow for floating effect */
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, #f6d365, #fda085);
+            border: none;
+            padding: 10px;
+            border-radius: 20px;
+            cursor: pointer;
+            color: #fff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            transform: scale(1.05);
+        }
+
+        .result {
+            background-color: #ffffff; /* Opaque white background */
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Apple Quality Prediction</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <label for="size">Size:</label>
+                    <input type="number" id="size" name="Size" step="0.01" class="form-control" required>
+                </div>
+                <div class="input-group">
+                    <label for="weight">Weight:</label>
+                    <input type="number" id="weight" name="Weight" step="0.01" class="form-control" required>
+                </div>
+                <div class="input-group">
+                    <label for="sweetness">Sweetness:</label>
+                    <input type="number" id="sweetness" name="Sweetness" step="0.01" class="form-control" required>
+                </div>
+                <div class="input-group">
+                    <label for="crunchiness">Crunchiness:</label>
+                    <input type="number" id="crunchiness" name="Crunchiness" step="0.01" class="form-control" required>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="input-group">
+                    <label for="juiciness">Juiciness:</label>
+                    <input type="number" id="juiciness" name="Juiciness" step="0.01" class="form-control" required>
+                </div>
+                <div class="input-group">
+                    <label for="ripeness">Ripeness:</label>
+                    <input type="number" id="ripeness" name="Ripeness" step="0.01" class="form-control" required>
+                </div>
+                <div class="input-group">
+                    <label for="acidity">Acidity:</label>
+                    <input type="number" id="acidity" name="Acidity" step="0.01" class="form-control" required>
+                </div>
+            </div>
+        </div>
+        <button type="button" class="btn btn-primary btn-submit" onclick="getPrediction()">Get Quality Prediction</button>
+        <div class="result" id="predictionResult"></div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        function getPrediction() {
+    var size = document.getElementById("size").value;
+    var weight = document.getElementById("weight").value;
+    var sweetness = document.getElementById("sweetness").value;
+    var crunchiness = document.getElementById("crunchiness").value;
+    var juiciness = document.getElementById("juiciness").value;
+    var ripeness = document.getElementById("ripeness").value;
+    var acidity = document.getElementById("acidity").value;
+
+    // Check if any field is empty
+    if (!size || !weight || !sweetness || !crunchiness || !juiciness || !ripeness || !acidity) {
+        alert("Please input values for all fields.");
+        return;
+    }
+
+    var formData = {
+        "Size": size,
+        "Weight": weight,
+        "Sweetness": sweetness,
+        "Crunchiness": crunchiness,
+        "Juiciness": juiciness,
+        "Ripeness": ripeness,
+        "Acidity": acidity
+    };
+
+    fetch('http://127.0.0.1:8000/quality_prediction', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.text())
+        .then(result => {
+            document.getElementById("predictionResult").textContent = "Prediction Result: " + result;
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+
+    </script>
+</body>
+
+</html>
